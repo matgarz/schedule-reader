@@ -5,7 +5,6 @@ An AI-powered React app that reads class schedule screenshots using Gemini's vis
 ## Features
 
 - Upload a schedule screenshot or take a photo directly (mobile)
-- Claude extracts all courses, session types (LEC/TUT/LAB), days, and times
 - Mobile-first layout with sticky CTA, safe-area support, and camera access
 - Fully typed with TypeScript
 
