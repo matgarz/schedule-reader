@@ -1,6 +1,6 @@
 # Schedule Reader
 
-An AI-powered React app that reads class schedule screenshots using Claude's vision API.
+An AI-powered React app that reads class schedule screenshots using Gemini's vision API.
 
 ## Features
 
