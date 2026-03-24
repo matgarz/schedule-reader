@@ -6,7 +6,6 @@ An AI-powered React app that reads class schedule screenshots using Gemini's vis
 
 - Upload a schedule screenshot or take a photo directly (mobile)
 - Mobile-first layout with sticky CTA, safe-area support, and camera access
-- Fully typed with TypeScript
 
 ## Getting Started
 
