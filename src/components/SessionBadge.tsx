@@ -1,10 +1,10 @@
 const SESSION_STYLES: Record<string, { bg: string; text: string }> = {
-  LEC: { bg: "#dbeafe", text: "#1e40af" },
-  TUT: { bg: "#d1fae5", text: "#065f46" },
-  LAB: { bg: "#ede9fe", text: "#5b21b6" },
+  LEC: { bg: "#e6ebf4", text: "#32386c" },
+  TUT: { bg: "#cbd5fe", text: "#32386c" },
+  LAB: { bg: "#a8b1eb", text: "#27293b" },
 };
 
-const DEFAULT = { bg: "#f3f4f6", text: "#374151" };
+const DEFAULT = { bg: "#e6ebf4", text: "#32386c" };
 
 interface Props {
   type: string;
@@ -14,16 +14,10 @@ export default function SessionBadge({ type }: Props) {
   const s = SESSION_STYLES[type] ?? DEFAULT;
   return (
     <span
+      className="session-badge"
       style={{
         background: s.bg,
         color: s.text,
-        fontSize: 10,
-        fontWeight: 600,
-        padding: "2px 8px",
-        borderRadius: 4,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
-        whiteSpace: "nowrap",
       }}
     >
       {type}

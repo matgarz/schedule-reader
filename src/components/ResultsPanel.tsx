@@ -1,4 +1,6 @@
 import type { ScheduleResult } from "../types";
+import { useMemo } from "react";
+import { buildPipeline } from "../lib/scheduling";
 import CourseCard from "./CourseCard";
 
 interface Props {
@@ -9,19 +11,42 @@ export default function ResultsPanel({ result }: Props) {
   const allSessions = result.courses.flatMap((c) =>
     c.sessions.map((s) => ({ course: c, session: s }))
   );
+  const pipeline = useMemo(() => buildPipeline([result]), [result]);
+  const topBestTime = pipeline.bestTimes[0];
+
+  const renderBlocks = (label: string, blocks: typeof pipeline.bestTimes) => (
+    <div className="panel">
+      <p className="panel-title">
+        {label} ({blocks.length})
+      </p>
+
+      {blocks.length === 0 ? (
+        <p className="summary-text">
+          No valid blocks yet from the parsed schedule.
+        </p>
+      ) : (
+        <ul className="block-list">
+          {blocks.slice(0, 6).map((block, i) => (
+            <li
+              key={`${label}-${block.day}-${block.start}-${block.end}-${i}`}
+              className="block-row"
+            >
+              <span className="block-day">
+                {block.day}
+              </span>
+              <span className="block-time">
+                {block.start} - {block.end}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 
   return (
     <div className="fade-up" style={{ marginBottom: 16 }}>
-      <p
-        style={{
-          fontSize: 10,
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "#9ca3af",
-          marginBottom: 10,
-        }}
-      >
+      <p className="results-meta">
         Detected — {allSessions.length} sessions
       </p>
 
@@ -37,29 +62,44 @@ export default function ResultsPanel({ result }: Props) {
         ))}
       </div>
 
-      <div
-        style={{
-          background: "#fff",
-          border: "1px solid #e5e7eb",
-          borderRadius: 12,
-          padding: "14px 16px",
-        }}
-      >
-        <p
-          style={{
-            fontSize: 10,
-            fontWeight: 600,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#9ca3af",
-            marginBottom: 8,
-          }}
-        >
+      <div className="panel">
+        <p className="panel-title">
           Summary
         </p>
-        <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.7 }}>
+        <p className="summary-text">
           {result.summary}
         </p>
+      </div>
+
+      <div style={{ height: 12 }} />
+
+      {topBestTime && (
+        <div className="best-time-spotlight">
+          <p className="panel-title">Top Recommendation</p>
+          <p className="best-time-main">
+            {topBestTime.day} {topBestTime.start} - {topBestTime.end}
+          </p>
+          <p className="best-time-sub">
+            Highest-ranked overlap window from the current availability model.
+          </p>
+        </div>
+      )}
+
+      <div className="pipeline-banner">
+        <p className="panel-title">
+          Scheduling Flow
+        </p>
+        <p className="pipeline-text">
+          schedule -&gt; busy block list -&gt; user availability list -&gt; team
+          availability list -&gt; best time
+        </p>
+      </div>
+
+      <div style={{ display: "grid", gap: 10 }}>
+        {renderBlocks("Busy blocks", pipeline.busyBlocks)}
+        {renderBlocks("User availability", pipeline.userAvailability)}
+        {renderBlocks("Team availability", pipeline.teamAvailability)}
+        {renderBlocks("Best times", pipeline.bestTimes)}
       </div>
     </div>
   );

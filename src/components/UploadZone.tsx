@@ -25,6 +25,8 @@ export default function UploadZone({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onFile(file);
+    // Allow selecting the same image again (notably needed on iOS file picker).
+    e.currentTarget.value = "";
   };
 
   return (
@@ -33,14 +35,14 @@ export default function UploadZone({
       <input
         ref={galleryRef}
         type="file"
-        accept="image/*"
+        accept="image/*,.heic,.heif"
         style={{ display: "none" }}
         onChange={handleChange}
       />
       <input
         ref={cameraRef}
         type="file"
-        accept="image/*"
+        accept="image/*,.heic,.heif"
         capture="environment"
         style={{ display: "none" }}
         onChange={handleChange}
@@ -48,15 +50,7 @@ export default function UploadZone({
 
       {previewSrc ? (
         /* Preview */
-        <div
-          style={{
-            background: "#fff",
-            border: "1px solid #e5e7eb",
-            borderRadius: 16,
-            padding: 12,
-            position: "relative",
-          }}
-        >
+        <div className="upload-frame" style={{ position: "relative" }}>
           <img
             src={previewSrc}
             alt="Schedule preview"
@@ -69,6 +63,8 @@ export default function UploadZone({
             }}
           />
           <button
+            type="button"
+            aria-label="Remove selected image"
             onClick={onReset}
             style={{
               position: "absolute",
@@ -77,7 +73,7 @@ export default function UploadZone({
               width: 30,
               height: 30,
               borderRadius: "50%",
-              background: "rgba(17,24,39,0.85)",
+              background: "rgba(79,88,170,0.92)",
               color: "#fff",
               border: "none",
               cursor: "pointer",
@@ -99,30 +95,13 @@ export default function UploadZone({
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDrop={onDrop}
-            style={{
-              border: `1.5px dashed ${dragging ? "#111827" : "#d1d5db"}`,
-              borderRadius: 16,
-              background: dragging ? "#f0fdf4" : "#fafaf9",
-              padding: "32px 24px",
-              textAlign: "center",
-              cursor: "pointer",
-              marginBottom: 12,
-              WebkitTapHighlightColor: "transparent" as never,
-              transition: "border-color 0.2s, background 0.2s",
-            }}
+            className={`upload-dropzone ${dragging ? "dragging" : ""}`}
           >
             <div style={{ fontSize: 36, marginBottom: 8 }}>🖼️</div>
-            <p
-              style={{
-                fontWeight: 600,
-                fontSize: 14,
-                color: "#374151",
-                marginBottom: 3,
-              }}
-            >
+            <p className="upload-title">
               Tap to choose from gallery
             </p>
-            <p style={{ fontSize: 12, color: "#9ca3af" }}>
+            <p className="upload-hint">
               or drag and drop — JPG, PNG, HEIC
             </p>
           </div>
@@ -131,19 +110,21 @@ export default function UploadZone({
           <div style={{ display: "flex", gap: 10 }}>
             <button
               className="upload-option-btn"
+              type="button"
               onClick={() => galleryRef.current?.click()}
             >
               <span style={{ fontSize: 26 }}>📁</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#1f275f" }}>
                 Browse files
               </span>
             </button>
             <button
               className="upload-option-btn"
+              type="button"
               onClick={() => cameraRef.current?.click()}
             >
               <span style={{ fontSize: 26 }}>📷</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#1f275f" }}>
                 Take photo
               </span>
             </button>

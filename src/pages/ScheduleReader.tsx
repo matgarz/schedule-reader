@@ -61,83 +61,30 @@ export default function ScheduleReader() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100dvh",
-        background: "#f8f7f4",
-        display: "flex",
-        flexDirection: "column",
-        paddingLeft: "env(safe-area-inset-left)",
-        paddingRight: "env(safe-area-inset-right)",
-      }}
-    >
+    <div className="page-shell">
       {/* Scrollable content */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "24px 16px 16px",
-          maxWidth: 680,
-          width: "100%",
-          margin: "0 auto",
-        }}
-      >
+      <div className="page-content">
         {/* Header */}
-        <div style={{ marginBottom: 28 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 6,
-            }}
-          >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                background: "#111827",
-                borderRadius: 8,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 18,
-                flexShrink: 0,
-              }}
-            >
+        <div className="hero">
+          <div className="hero-top">
+            <div className="hero-icon">
               📅
             </div>
-            <h1
-              style={{
-                fontSize: 20,
-                fontWeight: 700,
-                color: "#111827",
-                lineHeight: 1.2,
-              }}
-            >
-              Schedule Reader
-            </h1>
-            <span
-              style={{
-                fontSize: 9,
-                fontWeight: 700,
-                background: "#111827",
-                color: "#fff",
-                padding: "3px 8px",
-                borderRadius: 20,
-                letterSpacing: "0.07em",
-                textTransform: "uppercase",
-                flexShrink: 0,
-              }}
-            >
-              AI
-            </span>
+            <h1>Smart Group Scheduler</h1>
           </div>
-          <p style={{ color: "#6b7280", fontSize: 13, lineHeight: 1.6 }}>
-            Upload or photograph your class schedule — Claude extracts every
-            course, session type, day, and time.
+          <p>
+            Upload a schedule screenshot and instantly convert it into busy
+            blocks, personal availability, team overlap, and recommended
+            meeting windows.
           </p>
+          <div className="hero-strip">
+            <div className="hero-pill">Parse Schedules</div>
+            <div className="hero-pill accent">Find Overlap</div>
+            <div className="hero-pill">Recommend Best Time</div>
+          </div>
         </div>
+
+        <h2 className="section-title">Upload Your Schedule</h2>
 
         {/* Upload */}
         <UploadZone
@@ -152,19 +99,7 @@ export default function ScheduleReader() {
 
         {/* Error */}
         {error && (
-          <div
-            className="fade-up"
-            style={{
-              background: "#fef2f2",
-              border: "1px solid #fecaca",
-              borderRadius: 10,
-              padding: "12px 16px",
-              color: "#b91c1c",
-              fontSize: 13,
-              marginBottom: 16,
-              lineHeight: 1.5,
-            }}
-          >
+          <div className="fade-up error-box">
             {error}
           </div>
         )}
