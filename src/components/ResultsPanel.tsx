@@ -4,14 +4,14 @@ import { buildPipeline } from "../lib/scheduling";
 import CourseCard from "./CourseCard";
 
 interface Props {
-  result: ScheduleResult;
+  results: ScheduleResult[];
 }
 
-export default function ResultsPanel({ result }: Props) {
-  const allSessions = result.courses.flatMap((c) =>
+export default function ResultsPanel({ results }: Props) {
+  const allSessions = results.flatMap(r => r.courses).flatMap((c) =>
     c.sessions.map((s) => ({ course: c, session: s }))
   );
-  const pipeline = useMemo(() => buildPipeline([result]), [result]);
+  const pipeline = useMemo(() => buildPipeline(results), [results]);
   const topBestTime = pipeline.bestTimes[0];
 
   const renderBlocks = (label: string, blocks: typeof pipeline.bestTimes) => (
@@ -66,9 +66,9 @@ export default function ResultsPanel({ result }: Props) {
         <p className="panel-title">
           Summary
         </p>
-        <p className="summary-text">
-          {result.summary}
-        </p>
+        <div className="summary-text" style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          {results.map((r, i) => <p key={i} style={{margin: 0}}>{r.summary}</p>)}
+        </div>
       </div>
 
       <div style={{ height: 12 }} />

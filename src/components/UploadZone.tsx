@@ -88,48 +88,95 @@ export default function UploadZone({
           </button>
         </div>
       ) : (
-        <>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Drag-and-drop / tap zone */}
           <div
             onClick={() => galleryRef.current?.click()}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
             onDrop={onDrop}
-            className={`upload-dropzone ${dragging ? "dragging" : ""}`}
+            style={{
+              padding: '40px 20px',
+              border: dragging ? '1px dashed var(--primary)' : '1px dashed var(--border-light)',
+              borderRadius: 'var(--radius-md)',
+              background: dragging ? 'rgba(58, 46, 242, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s',
+              textAlign: 'center'
+            }}
           >
-            <div style={{ fontSize: 36, marginBottom: 8 }}>🖼️</div>
-            <p className="upload-title">
-              Tap to choose from gallery
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(255, 255, 255, 0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                 <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                 <polyline points="21 15 16 10 5 21"></polyline>
+               </svg>
+            </div>
+            <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
+              Click to browse or drag image here
             </p>
-            <p className="upload-hint">
-              or drag and drop — JPG, PNG, HEIC
+            <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+              Supports JPG, PNG, HEIC up to 10MB
             </p>
           </div>
 
-          {/* Mobile shortcut row */}
-          <div style={{ display: "flex", gap: 10 }}>
+          {/* Quick Actions */}
+          <div style={{ display: "flex", gap: 12 }}>
             <button
-              className="upload-option-btn"
               type="button"
               onClick={() => galleryRef.current?.click()}
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                background: '#1C1C24',
+                border: '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-secondary)',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8
+              }}
             >
-              <span style={{ fontSize: 26 }}>📁</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#1f275f" }}>
-                Browse files
-              </span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+              </svg>
+              Browse Files
             </button>
             <button
-              className="upload-option-btn"
               type="button"
               onClick={() => cameraRef.current?.click()}
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                background: '#1C1C24',
+                border: '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-secondary)',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8
+              }}
             >
-              <span style={{ fontSize: 26 }}>📷</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#1f275f" }}>
-                Take photo
-              </span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                 <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              Take Photo
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
