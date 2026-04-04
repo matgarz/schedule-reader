@@ -63,7 +63,10 @@ function parseTimeRange(range: string): { start: number; end: number } | null {
     .replace(/\s+to\s+/gi, "-")
     .trim();
 
-  const parts = normalized.split("-").map((p) => p.trim()).filter(Boolean);
+  const parts = normalized
+    .split("-")
+    .map((p) => p.trim())
+    .filter(Boolean);
   if (parts.length !== 2) return null;
 
   const start = parseTimeToken(parts[0]);
@@ -124,7 +127,7 @@ function invertToAvailability(busyBlocks: RawBlock[]): RawBlock[] {
         startMinutes: Math.max(DAY_START_MINUTES, b.startMinutes),
         endMinutes: Math.min(DAY_END_MINUTES, b.endMinutes),
       }))
-      .filter((b) => b.endMinutes > b.startMinutes)
+      .filter((b) => b.endMinutes > b.startMinutes),
   );
 
   const availability: RawBlock[] = [];
@@ -145,7 +148,11 @@ function invertToAvailability(busyBlocks: RawBlock[]): RawBlock[] {
     }
 
     if (cursor < DAY_END_MINUTES) {
-      availability.push({ dayIndex, startMinutes: cursor, endMinutes: DAY_END_MINUTES });
+      availability.push({
+        dayIndex,
+        startMinutes: cursor,
+        endMinutes: DAY_END_MINUTES,
+      });
     }
   }
 
@@ -156,8 +163,12 @@ function intersectTwo(a: RawBlock[], b: RawBlock[]): RawBlock[] {
   const intersections: RawBlock[] = [];
 
   for (let dayIndex = 0; dayIndex < DAYS.length; dayIndex += 1) {
-    const aDay = a.filter((x) => x.dayIndex === dayIndex).sort((x, y) => x.startMinutes - y.startMinutes);
-    const bDay = b.filter((x) => x.dayIndex === dayIndex).sort((x, y) => x.startMinutes - y.startMinutes);
+    const aDay = a
+      .filter((x) => x.dayIndex === dayIndex)
+      .sort((x, y) => x.startMinutes - y.startMinutes);
+    const bDay = b
+      .filter((x) => x.dayIndex === dayIndex)
+      .sort((x, y) => x.startMinutes - y.startMinutes);
 
     let i = 0;
     let j = 0;
@@ -181,9 +192,36 @@ function intersectTwo(a: RawBlock[], b: RawBlock[]): RawBlock[] {
   return mergeBlocks(intersections);
 }
 
-function chooseBestTimes(blocks: RawBlock[], maxCount = 3): RawBlock[] {
+/* function chooseBestTimes(blocks: RawBlock[], maxCount = 3): RawBlock[] {
   const scored = blocks
     .filter((b) => b.endMinutes - b.startMinutes >= 30)
+    .map((b) => {
+      const duration = b.endMinutes - b.startMinutes;
+      const midpoint = (b.startMinutes + b.endMinutes) / 2;
+      const proximityToNoon = Math.abs(midpoint - 12 * 60);
+      const timeOfDayBonus = Math.max(0, 240 - proximityToNoon);
+      const score = duration * 2 + timeOfDayBonus;
+      return { block: b, score };
+    })
+    .sort((x, y) => y.score - x.score)
+    .slice(0, maxCount)
+    .map((x) => x.block);
+
+  return scored;
+} */
+
+function chooseBestTimes(blocks: RawBlock[], maxCount = 3): RawBlock[] {
+  const EARLIEST = 9 * 60; // 09:00
+  const LATEST = 20 * 60; // 20:00
+
+  const scored = blocks
+    // filter by duration AND allowed time window
+    .filter(
+      (b) =>
+        b.endMinutes - b.startMinutes >= 30 &&
+        b.startMinutes >= EARLIEST &&
+        b.endMinutes <= LATEST,
+    )
     .map((b) => {
       const duration = b.endMinutes - b.startMinutes;
       const midpoint = (b.startMinutes + b.endMinutes) / 2;
@@ -227,6 +265,22 @@ function extractBusyBlocks(schedule: ScheduleResult): RawBlock[] {
  * Issue 5 pipeline:
  * schedule -> busy blocks -> user availability -> team availability -> best time
  */
+export function findCommonAvailability(
+  allUsersAvailability: RawBlock[][],
+): RawBlock[] {
+  if (allUsersAvailability.length === 0) return [];
+
+  let common = allUsersAvailability[0];
+
+  for (let i = 1; i < allUsersAvailability.length; i++) {
+    common = intersectTwo(common, allUsersAvailability[i]);
+
+    if (common.length === 0) break;
+  }
+
+  return mergeBlocks(common);
+}
+
 export function buildPipeline(schedules: ScheduleResult[]): PipelineResult {
   if (schedules.length === 0) {
     return {
@@ -241,13 +295,12 @@ export function buildPipeline(schedules: ScheduleResult[]): PipelineResult {
   const userAvailability = invertToAvailability(userBusy);
 
   const allAvailabilities = schedules.map((schedule) =>
-    invertToAvailability(extractBusyBlocks(schedule))
+    invertToAvailability(extractBusyBlocks(schedule)),
   );
 
-  const teamAvailability = allAvailabilities.slice(1).reduce(
-    (acc, current) => intersectTwo(acc, current),
-    allAvailabilities[0]
-  );
+  const teamAvailability = allAvailabilities
+    .slice(1)
+    .reduce((acc, current) => intersectTwo(acc, current), allAvailabilities[0]);
 
   const bestTimes = chooseBestTimes(teamAvailability);
 
