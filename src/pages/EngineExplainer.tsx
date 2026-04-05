@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function EngineExplainer() {
   return (
     <div className="fade-in" style={{ paddingBottom: 100 }}>

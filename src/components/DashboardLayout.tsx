@@ -1,9 +1,11 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const isRouteActive = (path: string) => {
     return location.pathname === path || (path === '/schedules' && location.pathname.startsWith('/g/'));
@@ -38,23 +40,44 @@ export default function DashboardLayout() {
           </div>
 
           <div className="top-actions">
-            <div 
-               onClick={handleSignOut}
-               title="Sign Out"
-               style={{ 
-                 cursor: 'pointer', background: 'transparent', border: '1px solid var(--border-light)', 
-                 display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                 width: 36, height: 36, borderRadius: '50%', color: 'var(--text-secondary)',
-                 transition: 'all 0.2s'
-               }}
-               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+            <button
+              type="button"
+              className="top-action-btn"
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3c0.5 0 0.75 0.6 0.39 0.96A7 7 0 0 0 20.04 12.4c0.36-0.36 0.96-0.11 0.96 0.39Z"></path>
+                </svg>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="top-action-btn"
+              onClick={handleSignOut}
+              title="Sign out"
+              aria-label="Sign out"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-            </div>
+            </button>
           </div>
         </header>
 

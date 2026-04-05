@@ -169,7 +169,7 @@ export default function Dashboard() {
         <div>
           <h2 className="serif-font" style={{ fontSize: 24, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 24 }}>Quick Insights</h2>
           
-          <div className="card" style={{ padding: 40, background: 'linear-gradient(180deg, rgba(30,30,30,0.5) 0%, rgba(20,20,20,0.2) 100%)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 'var(--radius-lg)' }}>
+          <div className="card" style={{ padding: 40, background: 'var(--insight-card-bg)', border: '1px solid var(--insight-card-border)', borderRadius: 'var(--radius-lg)' }}>
              <div style={{ color: '#8A84FF', marginBottom: 24 }}>
                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -180,7 +180,7 @@ export default function Dashboard() {
                Our engine identifies optimal meeting windows by analyzing cognitive load and peak focus hours across all participants.
              </p>
              
-             <div onClick={() => navigate('/engine')} style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}>
+             <div onClick={() => navigate('/engine')} style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary)'}>
                LEARN HOW IT WORKS 
                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
              </div>
