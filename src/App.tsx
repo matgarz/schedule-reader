@@ -10,6 +10,7 @@ import AuthPage from "./pages/AuthPage";
 import EngineExplainer from "./pages/EngineExplainer";
 import JoinCollectiveFocus from "./pages/JoinCollectiveFocus";
 import Spinner from "./components/Spinner";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -20,20 +21,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<AuthPage />} />
-          <Route element={<ProtectedRoute><JoinCollectiveFocus /></ProtectedRoute>} path="/join-focus" />
-          <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/schedules" element={<Schedules />} />
-            <Route path="/availability" element={<Availability />} />
-            <Route path="/engine" element={<EngineExplainer />} />
-            <Route path="/g/:id" element={<GroupSpace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route element={<ProtectedRoute><JoinCollectiveFocus /></ProtectedRoute>} path="/join-focus" />
+            <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/schedules" element={<Schedules />} />
+              <Route path="/availability" element={<Availability />} />
+              <Route path="/engine" element={<EngineExplainer />} />
+              <Route path="/g/:id" element={<GroupSpace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

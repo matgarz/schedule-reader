@@ -215,16 +215,17 @@ function chooseBestTimes(blocks: RawBlock[], maxCount = 3): RawBlock[] {
   const LATEST = 20 * 60; // 20:00
 
   const scored = blocks
-    // filter by duration AND allowed time window
-    .filter(
-      (b) =>
-        b.endMinutes - b.startMinutes >= 30 &&
-        b.startMinutes >= EARLIEST &&
-        b.endMinutes <= LATEST,
-    )
+    // Keep blocks that have at least 30 minutes usable inside the preferred 09:00-20:00 window.
+    .filter((b) => {
+      const usableStart = Math.max(b.startMinutes, EARLIEST);
+      const usableEnd = Math.min(b.endMinutes, LATEST);
+      return usableEnd - usableStart >= 30;
+    })
     .map((b) => {
-      const duration = b.endMinutes - b.startMinutes;
-      const midpoint = (b.startMinutes + b.endMinutes) / 2;
+      const usableStart = Math.max(b.startMinutes, EARLIEST);
+      const usableEnd = Math.min(b.endMinutes, LATEST);
+      const duration = usableEnd - usableStart;
+      const midpoint = (usableStart + usableEnd) / 2;
       const proximityToNoon = Math.abs(midpoint - 12 * 60);
       const timeOfDayBonus = Math.max(0, 240 - proximityToNoon);
       const score = duration * 2 + timeOfDayBonus;

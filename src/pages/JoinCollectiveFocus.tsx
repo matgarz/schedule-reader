@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import GeometricBlurMesh from '../components/GeometricBlurMesh';
 
@@ -6,7 +5,7 @@ export default function JoinCollectiveFocus() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#000' }}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100dvh', background: '#000' }}>
       {/* Background WebGL Shader */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
         <GeometricBlurMesh />
